@@ -11,7 +11,7 @@ import (
 func TestAddTask(t *testing.T) {
 	req := &pb_mani.CreateTaskReq{
 		Task: &pb_mani.Task{
-			RuleId:       "rrr",
+			RuleId:       "rrr66",
 			Operator:     "dsadcas",
 			ExecuteState: pb_mani.ExecuteState_execute_wait,
 			OutputState:  pb_mani.FileState_file_invalid,
@@ -39,3 +39,5 @@ func TestUpdateTask(t *testing.T) {
 	resp, err := handler.UpdateTask(context.Background(), req)
 	fmt.Println(resp, err)
 }
+
+

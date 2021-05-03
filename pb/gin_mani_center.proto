@@ -58,6 +58,7 @@ message UpdateRuleResp{
 
 
 
+
 service GinCenterService{
   rpc AddRule(AddRuleReq) returns(AddRuleResp);
   rpc GetRuleByRuleType(GetRuleByRuleTypeReq) returns(GetRuleByRuleTypeResp);

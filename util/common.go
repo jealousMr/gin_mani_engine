@@ -7,6 +7,7 @@ import (
 	pb_mani "gin_mani_engine/pb"
 	"log"
 	"math/rand"
+	"os"
 	"runtime"
 	"time"
 )
@@ -89,4 +90,16 @@ func defaultF(ctx context.Context) {
 
 func GoParallel(ctx context.Context, f func()) {
 	goWithRecovery(ctx, defaultF, f)
+}
+
+func SaveFile(fileUrl string, im []byte) error {
+	file, err := os.OpenFile(fileUrl, os.O_CREATE|os.O_WRONLY, 0600)
+	if err != nil {
+		return err
+	}
+	_, err = file.Write(im)
+	if err != nil {
+		return err
+	}
+	return nil
 }

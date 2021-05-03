@@ -25,10 +25,12 @@ func CreateTask(ctx context.Context, req *pb_mani.CreateTaskReq) (resp *pb_mani.
 		logx.Errorf("CreateTask checkCreateTask error:%v", err)
 		return
 	}
-	if err = logic.AddTask(ctx, req.Task); err != nil {
+	taskId, err := logic.AddTask(ctx, req.Task)
+	if err != nil {
 		logx.Errorf("CreateTask error:%v", err)
 		return
 	}
+	resp.TaskId = taskId
 	return
 }
 

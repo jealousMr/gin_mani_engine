@@ -16,11 +16,17 @@ type S struct {
 }
 
 func (s S) FileUriToServer(ctx context.Context, req *pb_mani.FileUriToServerReq) (*pb_mani.FileUriToServerResp, error) {
-	panic("implement me")
+	logx.Infoln("FileUriToServer req: %v", req)
+	resp, err := handler.FileUriToServer(ctx, req)
+	logx.Infoln("FileUriToServer resp: %v", resp)
+	return resp, err
 }
 
 func (s S) FileUriToCrm(ctx context.Context, req *pb_mani.FileUriToCrmReq) (*pb_mani.FileUriToCrmResp, error) {
-	panic("implement me")
+	logx.Infoln("FileUriToCrm req: %v", req)
+	resp, err := handler.FileUriToCrm(ctx, req)
+	logx.Infoln("FileUriToCrm resp: %v", resp)
+	return resp, err
 }
 
 func (s S) CreateTask(ctx context.Context, req *pb_mani.CreateTaskReq) (*pb_mani.CreateTaskResp, error) {

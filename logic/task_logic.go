@@ -9,7 +9,7 @@ import (
 	logx "github.com/amoghe/distillog"
 )
 
-func AddTask(ctx context.Context, task *pb_mani.Task) error {
+func AddTask(ctx context.Context, task *pb_mani.Task) (string, error) {
 	taskModel := &model.TaskModel{
 		TaskId:       util.GenUID(),
 		RuleId:       task.RuleId,
@@ -21,9 +21,9 @@ func AddTask(ctx context.Context, task *pb_mani.Task) error {
 	}
 	if err := dal.AddTask(ctx, taskModel); err != nil {
 		logx.Errorf("logic AddTask error:%v", err)
-		return err
+		return "", err
 	}
-	return nil
+	return taskModel.TaskId, nil
 }
 
 func GetTaskByCondition(ctx context.Context, taskId, ruleId string, executeState pb_mani.ExecuteState) ([]*pb_mani.Task, error) {
