@@ -103,3 +103,14 @@ func SaveFile(fileUrl string, im []byte) error {
 	}
 	return nil
 }
+
+func CheckFileExist(filepath string) (exist bool) {
+	fileInfo, e := os.Stat(filepath)
+	if fileInfo != nil && e == nil {
+		exist = true
+
+	} else if os.IsNotExist(e) {
+		exist = false
+	}
+	return
+}

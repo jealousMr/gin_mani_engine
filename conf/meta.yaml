@@ -9,6 +9,6 @@ database:
   name: "manidb"
 
 router:
-  default_all_action_file: "1"
-  open_all_action_file: "1"
-  default_image_action_file: "1"
+  default_all_action_file: "/home/xyl/src/gin_mani_crm_api/static/default_all"
+  open_all_action_file: "/home/xyl/src/gin_mani_crm_api/static/open_all"
+  default_image_action_file: "/home/xyl/src/gin_mani_crm_api/static/default_image"

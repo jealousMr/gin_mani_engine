@@ -53,7 +53,7 @@ func (s S) UpdateTask(ctx context.Context, req *pb_mani.UpdateTaskReq) (*pb_mani
 func main() {
 	cf := conf.GetConfig()
 	logx.Infof("start mani engine server")
-	lis, err := net.Listen("tcp", cf.Server.Ip)
+	lis, err := net.Listen("tcp", cf.Server.Port)
 	if err != nil {
 		log.Fatal("failed to listen")
 	}
