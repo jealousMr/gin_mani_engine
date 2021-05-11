@@ -12,13 +12,13 @@ import (
 	"time"
 )
 
-const (
+var (
 	OutputName       = "1_sf_0_SF.png"
-	CommandSHFileUrl = "/home/xyl/src/gin_mani_engine/util/task.sh"
+	CommandSHFileUrl = fmt.Sprintf("%s/src/gin_mani_engine/util/task.sh", os.Getenv("GOPATH"))
 
 	// py env set
 	Env        = "source ~/.bash_profile && source activate gan_env"
-	ModelRoute = "cd /home/xyl/src/ManiGAN/code"
+	ModelRoute = fmt.Sprintf("cd %s/src/gin_mani_engine/ManiGAN/code", os.Getenv("GOPATH"))
 	RunCommon  = "python testRun.py"
 )
 
@@ -29,7 +29,7 @@ func ExecuteTask(ctx context.Context, imageName, imageUrl, desc string, action p
 		logx.Errorf("save desc to file error")
 		return "", "", err
 	}
-	if err := genCommand(imageUrl, descFileUrl, imageName); err != nil {
+	if err := genCommand(imageUrl, descFileUrl, imageName, action); err != nil {
 		logx.Errorf("ExecuteTask genCommand error:%v", err)
 		return "", "", err
 	}
@@ -42,20 +42,32 @@ func ExecuteTask(ctx context.Context, imageName, imageUrl, desc string, action p
 	cf := conf.GetConfig()
 	switch action {
 	case pb_mani.RuleType_default_all:
-		oUrl = fmt.Sprintf("%s/%s", cf.Router.DefaultAllActionFile, OutputName)
+		oUrl = fmt.Sprintf("%s/%s/%s", cf.Router.DefaultAllActionFile, imageName, OutputName)
 		break
 	case pb_mani.RuleType_default_image:
-		oUrl = fmt.Sprintf("%s/%s", cf.Router.DefaultImageActionFile, OutputName)
+		oUrl = fmt.Sprintf("%s/%s/%s", cf.Router.DefaultImageActionFile, imageName, OutputName)
 		break
 	case pb_mani.RuleType_open_all:
-		oUrl = fmt.Sprintf("%s/%s", cf.Router.OpenAllActionFile, OutputName)
+		oUrl = fmt.Sprintf("%s/%s/%s", cf.Router.OpenAllActionFile, imageName, OutputName)
 		break
 	}
 	return OutputName, oUrl, nil
 }
 
-func genCommand(imageUrl, descUrl string, imageName string) error {
+func genCommand(imageUrl, descUrl string, imageName string, action pb_mani.RuleType) error {
+	switch action {
+	case pb_mani.RuleType_default_all:
+		imageName = fmt.Sprintf("default_all/%s", imageName)
+		break
+	case pb_mani.RuleType_open_all:
+		imageName = fmt.Sprintf("open_all/%s", imageName)
+		break
+	case pb_mani.RuleType_default_image:
+		imageName = fmt.Sprintf("default_image/%s", imageName)
+		break
+	}
 	param := fmt.Sprintf("%s --source_image_url %s --source_text_url %s --out_name %s", RunCommon, imageUrl, descUrl, imageName)
+
 	command := fmt.Sprintf("%s&&\n%s&&\n%s", Env, ModelRoute, param)
 	f, err := os.OpenFile(CommandSHFileUrl, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
 	if err != nil {

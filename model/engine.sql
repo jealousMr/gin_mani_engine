@@ -12,3 +12,4 @@ create table task(
     PRIMARY KEY (`id`),
     UNIQUE (`task_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+

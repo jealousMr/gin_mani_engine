@@ -3,6 +3,7 @@ package test
 import (
 	"context"
 	"fmt"
+	"gin_mani_engine/dal"
 	"gin_mani_engine/handler"
 	pb_mani "gin_mani_engine/pb"
 	"testing"
@@ -38,6 +39,11 @@ func TestUpdateTask(t *testing.T) {
 	}
 	resp, err := handler.UpdateTask(context.Background(), req)
 	fmt.Println(resp, err)
+}
+
+func TestGetTask2(t *testing.T) {
+	tasks,err := dal.GetTaskByCondition(context.Background(), "", "", pb_mani.ExecuteState_execute_running)
+	fmt.Println(tasks, err)
 }
 
 

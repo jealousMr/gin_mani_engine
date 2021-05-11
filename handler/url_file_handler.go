@@ -10,7 +10,7 @@ import (
 )
 
 func checkFileUriToCrm(req *pb_mani.FileUriToCrmReq) error {
-	if (req.FileName == "" && req.SaveUrl == "") || req.FileAction == pb_mani.FileAction_unknown_file_action {
+	if len(req.CrmList) == 0 || req.FileAction == pb_mani.FileAction_unknown_file_action {
 		return errors.New(util.MsgParamError)
 	}
 	return nil
@@ -25,12 +25,12 @@ func FileUriToCrm(ctx context.Context, req *pb_mani.FileUriToCrmReq) (resp *pb_m
 		logx.Errorf("checkFileUriToCrm error:%v", err)
 		return
 	}
-	url, err := logic.FileUriToCrm(ctx, req)
+	urls, err := logic.FileUriToCrm(ctx, req.CrmList, req.FileAction)
 	if err != nil {
 		logx.Errorf("FileUriToCrm error:%v", err)
 		return
 	}
-	resp.Url = url
+	resp.TagUrlMap = urls
 	return
 
 }

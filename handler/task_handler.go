@@ -82,3 +82,28 @@ func UpdateTask(ctx context.Context, req *pb_mani.UpdateTaskReq) (resp *pb_mani.
 	}
 	return
 }
+
+func checkGetTaskByRules(req *pb_mani.GetTaskByRulesReq) error {
+	if req.RuleList == nil || len(req.RuleList) == 0 {
+		return errors.New(util.MsgParamError)
+	}
+	return nil
+}
+
+func GetTaskByRules(ctx context.Context, req *pb_mani.GetTaskByRulesReq) (resp *pb_mani.GetTaskByRulesResp, err error) {
+	resp = &pb_mani.GetTaskByRulesResp{}
+	defer func() {
+		resp.BaseResp = util.BuildBaseResp(err, "")
+	}()
+	if err = checkGetTaskByRules(req); err != nil {
+		logx.Errorf("checkGetTaskByRules error:%v", err)
+		return
+	}
+	tmap, err := logic.GetTaskByRuleIds(ctx, req.RuleList)
+	if err != nil {
+		logx.Errorf("GetTaskByRules error:%v", err)
+		return resp, err
+	}
+	resp.RuleTaskMap = tmap
+	return
+}

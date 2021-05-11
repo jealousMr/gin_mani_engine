@@ -57,3 +57,17 @@ func UpdateTask(ctx context.Context, taskId string, updateFileds map[string]inte
 	}
 	return nil
 }
+
+func GetTaskByRuleIds(ctx context.Context, ids []string) ([]*model.TaskModel, error) {
+	db, err := GetDBProxy()
+	if err != nil {
+		logx.Errorf("db get error:%v", err)
+		return nil, err
+	}
+	tasks := make([]*model.TaskModel, 0)
+	if err := db.Table(model.TaskTableName()).Where("rule_id in (?)", ids).Find(&tasks).Error; err != nil {
+		logx.Errorf("dal GetTaskByRuleIds error:%v", err)
+		return nil, err
+	}
+	return tasks, nil
+}

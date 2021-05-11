@@ -1,14 +1,16 @@
 server:
   port: ":8087"
-  ip: "47.93.22.146"
+  ip: "localhost"
 
 database:
+  addr: "47.93.22.146"
   port: "3306"
   user: "dms"
   pass: "lcx-machine0918LMY"
   name: "manidb"
 
-router:
-  default_all_action_file: "/home/xyl/src/gin_mani_crm_api/static/default_all"
-  open_all_action_file: "/home/xyl/src/gin_mani_crm_api/static/open_all"
-  default_image_action_file: "/home/xyl/src/gin_mani_crm_api/static/default_image"
+client:
+  user: ":8088"
+  center: ":8089"
+  engine: ":8087"
+

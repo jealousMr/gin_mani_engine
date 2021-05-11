@@ -4,15 +4,24 @@ import (
 	"context"
 	"gin_mani_engine/conf"
 	"gin_mani_engine/handler"
+	"gin_mani_engine/logic"
 	pb_mani "gin_mani_engine/pb"
 	logx "github.com/amoghe/distillog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
+	"time"
 )
 
 type S struct {
+}
+
+func (s S) GetTaskByRules(ctx context.Context, req *pb_mani.GetTaskByRulesReq) (*pb_mani.GetTaskByRulesResp, error) {
+	logx.Infoln("GetTaskByRules req: %v", req)
+	resp, err := handler.GetTaskByRules(ctx, req)
+	logx.Infoln("GetTaskByRules resp: %v", resp)
+	return resp, err
 }
 
 func (s S) FileUriToServer(ctx context.Context, req *pb_mani.FileUriToServerReq) (*pb_mani.FileUriToServerResp, error) {
@@ -53,6 +62,18 @@ func (s S) UpdateTask(ctx context.Context, req *pb_mani.UpdateTaskReq) (*pb_mani
 func main() {
 	cf := conf.GetConfig()
 	logx.Infof("start mani engine server")
+
+	logx.Infof("run mani engine executor success...")
+	ticker := time.NewTicker(time.Minute * 1)
+	go func() {
+		for _=range ticker.C {
+			err := logic.ExecuteTask(context.Background())
+			if err != nil{
+				logx.Errorf("ExecuteTask error:%v",err)
+			}
+		}
+	}()
+
 	lis, err := net.Listen("tcp", cf.Server.Port)
 	if err != nil {
 		log.Fatal("failed to listen")

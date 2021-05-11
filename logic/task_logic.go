@@ -73,3 +73,24 @@ func UpdateTask(ctx context.Context, req *pb_mani.UpdateTaskReq) error {
 	}
 	return nil
 }
+
+func GetTaskByRuleIds(ctx context.Context, ids []string) (map[string]*pb_mani.Task, error) {
+	taskMap := make(map[string]*pb_mani.Task, 0)
+	tasks, err := dal.GetTaskByRuleIds(ctx, ids)
+	if err != nil {
+		logx.Errorf("logic GetTaskByRuleIds error")
+		return nil, err
+	}
+	for _, t := range tasks {
+		taskMap[t.RuleId] = &pb_mani.Task{
+			TaskId: t.TaskId,
+			RuleId: t.RuleId,
+			Operator: t.Operator,
+			ExecuteState: pb_mani.ExecuteState(t.ExecuteState),
+			OutputName: t.OutputName,
+			OutputUrl: t.OutputUrl,
+			OutputState: pb_mani.FileState(t.OutputState),
+		}
+	}
+	return taskMap, nil
+}
